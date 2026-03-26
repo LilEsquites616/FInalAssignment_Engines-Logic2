@@ -12,13 +12,10 @@ public class EnemySpawner : MonoBehaviour
     public int currentWaveIndex = 0;
 
     [Header("Spawn Points")]
-    public Transform spawnPoint1;
-    public Transform spawnPoint2;
-
+    public Transform[] spawnPoints;
     [Header("UI Elements")]
     public TextMeshProUGUI waveCount;
     public TextMeshProUGUI waveDescription;
-    public GameObject levelUpPanel;
 
     [Header("Enemy Settings")]
     public GameObject enemyPrefab;
@@ -63,9 +60,9 @@ public class EnemySpawner : MonoBehaviour
             EnemyData enemyData = GetRandomEnemyData(wave, randomValue);
 
             GameObject enemy = Instantiate(enemyPrefab, GetRandomSpawnPosition(), Quaternion.identity);
-            enemy.GetComponent<Enemy>().enemyData = enemyData;
-
-            enemy.GetComponent<Enemy>().OnDeath += OnEnemyDefeated;
+            enemy.GetComponent<EnemyHealth>().enemyData = enemyData;
+            enemy.GetComponent<EnemyController>().enemyData = enemyData;
+            enemy.GetComponent<EnemyHealth>().OnDeath += OnEnemyDefeated;
 
             enemiesLeftToSpawn--;
 
@@ -91,7 +88,14 @@ public class EnemySpawner : MonoBehaviour
 
     private Vector3 GetRandomSpawnPosition()
     {
-        return Vector3.Lerp(spawnPoint1.position, spawnPoint2.position, Random.Range(0f, 1f));
+        if (spawnPoints == null || spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("No spawn points assigned!");
+            return Vector3.zero;
+        }
+
+        int randomIndex = Random.Range(0, spawnPoints.Length);
+        return spawnPoints[randomIndex].position;
     }
 
 
@@ -104,8 +108,7 @@ public class EnemySpawner : MonoBehaviour
         {
             if (currentWaveIndex+1 < waveData.Length)
             {
-                levelUpPanel.SetActive(true);
-                waveDescription.text = "Wave complete!";
+                StartNextWave();
             }
             else
             {

@@ -8,13 +8,16 @@ public class EnemyData : ScriptableObject
     [Header("Stats")]
     public int health;               
     public int damage;               
-    public float speed;
+    public float turnSpeed = 180f;
+    public float attackRadius = 8f;
+    public float safeRadius = 5f;
+    public float speed = 1f;
 
     [Header("Attack Settings")]
-    public float attackSpeed;
-    public float bulletSpeed;
-    public bool canShoot;
-    public int scoreValue; 
+    public float attackSpeed = 1f;
+    public float bulletSpeed = 20f;
+    public bool canShoot = true;
+    public int scoreValue = 100; 
 
     [Header("Visual")]
     public RuntimeAnimatorController enemyAnimator;

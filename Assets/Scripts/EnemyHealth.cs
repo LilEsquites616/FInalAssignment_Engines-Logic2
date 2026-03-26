@@ -1,17 +1,20 @@
 using System.Collections;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class EnemyHealth : MonoBehaviour
 {
     public EnemyData enemyData;  
     [SerializeField] private int health;
-    [SerializeField] private int damage;
     public delegate void DeathHandler();
     public event DeathHandler OnDeath;
 
     void Start()
     {
         health = enemyData.health;
-        damage = enemyData.damage;  
+        StatPass();
+    }
+    public void StatPass()
+    {
+        health = enemyData.health;
     }
 }

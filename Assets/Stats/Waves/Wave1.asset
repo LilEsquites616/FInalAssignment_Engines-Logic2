@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 463de7754ab57d543abfc923dd1721ef, type: 3}
-  m_Name: TestWave
+  m_Name: Wave1
   m_EditorClassIdentifier: Assembly-CSharp::Wave
-  waveNumber: 0
-  totalEnemiesToSpawn: 0
-  spawnRate: 0
-  normalEnemyWeight: 0.5
-  hardEnemyWeight: 0.25
-  eliteEnemyWeight: 0.25
-  normalEnemy: {fileID: 0}
-  hardEnemy: {fileID: 0}
-  eliteEnemy: {fileID: 0}
+  waveNumber: 1
+  totalEnemiesToSpawn: 10
+  spawnRate: 2
+  normalEnemyWeight: 0.33
+  hardEnemyWeight: 0.33
+  eliteEnemyWeight: 0.33
+  normalEnemy: {fileID: 11400000, guid: 9fedbc4ab7902234d986b102c0f8caf7, type: 2}
+  hardEnemy: {fileID: 11400000, guid: 4128b43dd36f4834f9c901ad07c5c586, type: 2}
+  eliteEnemy: {fileID: 11400000, guid: 02440da3d95fc5040b15369424ebecb3, type: 2}
