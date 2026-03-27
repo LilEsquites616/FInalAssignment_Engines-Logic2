@@ -9,8 +9,8 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
     public bool loadBannerOnStart = false;
     private string bannerAdUnitId;
     public Button showRewardAdButton;
-    public GemManager gemManager;
-    public int gemsPerRewardAd;
+    public ChipManager chipManager;
+    public int chipsPerRewardAd;
     public AnalyticsManager analyticsManager;
     private void Awake()
     {
@@ -21,10 +21,6 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
 #elif UNITY_EDITOR
     adUnitAffix = "_Android";
 #endif
-    if (gemManager.gemCount==0)
-        showRewardAdButton.interactable = true;
-    else if (gemManager.gemCount > 0)
-        showRewardAdButton.interactable = false;
     bannerAdUnitId = bannerAdUnitPrefix + adUnitAffix;
     if (loadBannerOnStart)
         LoadBanner();
@@ -71,7 +67,7 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         Debug.Log($"{placementID} completed");
         if (placementID == "Rewarded_Android" || placementID == "Rewarded_iOS")
         {
-            gemManager.UpdateGemCount(gemsPerRewardAd);
+            chipManager.UpdateChipCount(chipsPerRewardAd);
         }
         LoadBanner();
     }

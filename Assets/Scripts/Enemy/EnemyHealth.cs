@@ -11,10 +11,23 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         health = enemyData.health;
-        StatPass();
     }
     public void StatPass()
     {
         health = enemyData.health;
+    }
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+        if (health <= 0)
+        {
+            Die(true);
+        }
+    }
+    private void Die(bool giveScore)
+    {
+        Destroy(gameObject);
+        OnDeath?.Invoke();
+        Destroy(gameObject);
     }
 }

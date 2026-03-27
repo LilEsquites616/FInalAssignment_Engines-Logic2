@@ -32,9 +32,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-
         StartWave(waveData[currentWaveIndex]);
-        
     }
 
     public void StartWave(Wave wave)
@@ -56,13 +54,21 @@ public class EnemySpawner : MonoBehaviour
         {
             float totalWeight = spawnWeights.Sum();
             float randomValue = Random.Range(0f, totalWeight);
-            
+
             EnemyData enemyData = GetRandomEnemyData(wave, randomValue);
 
             GameObject enemy = Instantiate(enemyPrefab, GetRandomSpawnPosition(), Quaternion.identity);
-            enemy.GetComponent<EnemyHealth>().enemyData = enemyData;
-            enemy.GetComponent<EnemyController>().enemyData = enemyData;
-            enemy.GetComponent<EnemyHealth>().OnDeath += OnEnemyDefeated;
+
+            EnemyHealth health = enemy.GetComponent<EnemyHealth>();
+            EnemyController controller = enemy.GetComponent<EnemyController>();
+
+            health.enemyData = enemyData;
+            controller.enemyData = enemyData;
+
+            health.StatPass();
+            controller.StatPass();
+
+            health.OnDeath += OnEnemyDefeated;
 
             enemiesLeftToSpawn--;
 

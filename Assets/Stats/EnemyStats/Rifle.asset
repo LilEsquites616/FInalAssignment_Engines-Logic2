@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: 
   health: 5
-  damage: 1
+  damage: 5
   turnSpeed: 180
   attackRadius: 10
   safeRadius: 8

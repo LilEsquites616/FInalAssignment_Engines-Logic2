@@ -19,6 +19,7 @@ public class EnemyController : MonoBehaviour
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 lookDirection;
     private Vector3 startPosition;
+    private float distance;
     private readonly int hasTargetParam = Animator.StringToHash("Player Close");
     [SerializeField] private AudioSource detectSfx;
     [SerializeField] private  AudioSource unDetectSfx;
@@ -28,16 +29,8 @@ public class EnemyController : MonoBehaviour
         if (body == null) body = GetComponent<Rigidbody>();
         if (animator == null) animator = GetComponent<Animator>();
         if (navAgent == null) navAgent = GetComponent<NavMeshAgent>();
-        if (enemyData!=null)
-        {
-            navAgent.speed = enemyData.speed;
-            turnSpeed = enemyData.turnSpeed;
-            attackRadius = enemyData.attackRadius;
-            safeRadius = enemyData.safeRadius;
-        }
-        Target = GameObject.FindWithTag("Player").transform;
-        StatPass();
-
+        if (GameObject.FindWithTag("Player")!=null)
+            Target = GameObject.FindWithTag("Player").transform;
     }
     public void StatPass()
     {
@@ -49,7 +42,8 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        float distance = Vector3.Distance(transform.position, Target.position);
+        if (Target!=null)
+            distance = Vector3.Distance(transform.position, Target.position);
         bool isTargetClose = distance <= safeRadius;
         animator.SetBool(hasTargetParam, isTargetClose);
         

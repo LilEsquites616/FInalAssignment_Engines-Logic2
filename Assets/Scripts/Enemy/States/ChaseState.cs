@@ -24,16 +24,20 @@ public class ChaseState : StateMachineBehaviour
     {
         if (animator.IsInTransition(0)) return;
 
-        navAgent.SetDestination(enemyController.Target.position);
+        if (enemyController.Target!=null)
+        {
+            navAgent.SetDestination(enemyController.Target.position);
 
-        Vector3 lookDirection = (navAgent.steeringTarget - navAgent.transform.position).normalized;
-        Vector3 moveDirection = navAgent.transform.InverseTransformDirection(lookDirection);
+            Vector3 lookDirection = (navAgent.steeringTarget - navAgent.transform.position).normalized;
+            Vector3 moveDirection = navAgent.transform.InverseTransformDirection(lookDirection);
 
-        enemyController.lookDirection = lookDirection;
-        enemyController.moveDirection = moveDirection;
-
-        if (Vector3.Distance(navAgent.transform.position, enemyController.Target.position) < enemyController.attackRadius)
-            animator.SetTrigger(attackParam);
+            enemyController.lookDirection = lookDirection;
+            enemyController.moveDirection = moveDirection;
+        
+            if (Vector3.Distance(navAgent.transform.position, enemyController.Target.position) < enemyController.attackRadius)
+                animator.SetTrigger(attackParam);
+        }
+            
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

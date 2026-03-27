@@ -6,9 +6,7 @@ public class AttackState : StateMachineBehaviour
     private EnemyController enemyController;
     private NavMeshAgent navAgent;
     private float attackRadius;
-
     private bool initialized;
-
     private readonly int chaseParam = Animator.StringToHash("Chase");
 
     private float shootCooldown = 1f;
@@ -32,25 +30,27 @@ public class AttackState : StateMachineBehaviour
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if (animator.IsInTransition(0)) return;
-
-        Vector3 lookDirection = (enemyController.Target.position - navAgent.transform.position).normalized;
-        Vector3 moveDirection = (navAgent.steeringTarget - navAgent.transform.position).normalized;
-
-        enemyController.lookDirection = lookDirection;
-        enemyController.moveDirection = navAgent.transform.InverseTransformDirection(moveDirection);
-
-        float distanceToTarget = Vector3.Distance(navAgent.transform.position, enemyController.Target.position);
-
-        if (distanceToTarget > attackRadius)
+        if (enemyController.Target!=null)
         {
-            animator.SetTrigger(chaseParam);
-        }
-        else
-        {
-            if (!navAgent.hasPath)
-                navAgent.SetDestination(GetNewAttackPosition());
+            Vector3 lookDirection = (enemyController.Target.position - navAgent.transform.position).normalized;
+            Vector3 moveDirection = (navAgent.steeringTarget - navAgent.transform.position).normalized;
 
-            TryShootAtTarget();
+            enemyController.lookDirection = lookDirection;
+            enemyController.moveDirection = navAgent.transform.InverseTransformDirection(moveDirection);
+
+            float distanceToTarget = Vector3.Distance(navAgent.transform.position, enemyController.Target.position);
+
+            if (distanceToTarget > attackRadius)
+            {
+                animator.SetTrigger(chaseParam);
+            }
+            else
+            {
+                if (!navAgent.hasPath)
+                    navAgent.SetDestination(GetNewAttackPosition());
+
+                TryShootAtTarget();
+            }
         }
     }
 
@@ -70,6 +70,8 @@ public class AttackState : StateMachineBehaviour
         GameObject bullet = Instantiate(enemyController.bulletPrefab, enemyController.firePoint.position, Quaternion.LookRotation(enemyController.Target.position - enemyController.firePoint.position));
         
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        bullet.GetComponent<Bullet>().damage = enemyController.enemyData.damage;
+
         if (rb != null)
         {
             rb.linearVelocity = (enemyController.Target.position - enemyController.firePoint.position).normalized * enemyController.bulletSpeed;
