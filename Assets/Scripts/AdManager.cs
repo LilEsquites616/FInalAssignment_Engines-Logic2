@@ -69,7 +69,8 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         {
             chipManager.UpdateChipCount(chipsPerRewardAd);
         }
-        LoadBanner();
+        if (loadBannerOnStart)
+            LoadBanner();
     }
     #endregion
 
