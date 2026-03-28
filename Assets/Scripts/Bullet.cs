@@ -4,6 +4,8 @@ public class Bullet : MonoBehaviour
 {
     public float lifetime = 5f;
     public float damage = 10f;
+    public bool damagePlayer = true;
+    public bool damageEnemies;
 
     private void Start()
     {
@@ -12,17 +14,31 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<EnemyController>() != null)
+        if (damageEnemies)
         {
-            return;
+            EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(Mathf.RoundToInt(damage));
+                Destroy(gameObject);
+                return;
+            }
         }
 
-        PlayerHealth target = other.GetComponent<PlayerHealth>();
-        if (target != null)
+        if (damagePlayer)
         {
-            target.TakeDamage(damage);
+            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+                Destroy(gameObject);
+                return;
+            }
         }
 
-        Destroy(gameObject);
+        if (!other.isTrigger)
+        {
+            Destroy(gameObject);
+        }
     }
 }
