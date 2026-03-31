@@ -70,7 +70,14 @@ public class AttackState : StateMachineBehaviour
         GameObject bullet = Instantiate(enemyController.bulletPrefab, enemyController.firePoint.position, Quaternion.LookRotation(enemyController.Target.position - enemyController.firePoint.position));
         
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        bullet.GetComponent<Bullet>().damage = enemyController.enemyData.damage;
+        Bullet bulletComponent = bullet.GetComponent<Bullet>();
+
+        if (bulletComponent != null)
+        {
+            bulletComponent.damage = enemyController.enemyData.damage;
+            bulletComponent.damagePlayer = true;
+            bulletComponent.damageEnemies = false;
+        }
 
         if (rb != null)
         {
