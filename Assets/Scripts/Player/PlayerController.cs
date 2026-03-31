@@ -14,12 +14,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 6f;
-    [SerializeField] private float rotationSpeed = 720f;
+    [SerializeField] private float acceleration = 30f;
+    [SerializeField] private float deceleration = 40f;
+    [SerializeField] private float rotationSpeed = 1080f;
 
     [Header("Jump")]
-    [SerializeField] private float jumpForce = 7f;
-    [SerializeField] private float groundCheckDistance = 0.15f;
-    [SerializeField] private float fallGravityMultiplier = 2.5f;
+    [SerializeField] private float jumpForce = 5.5f;
+    [SerializeField] private float groundCheckDistance = 0.2f;
+    [SerializeField] private float riseGravityMultiplier = 2f;
+    [SerializeField] private float fallGravityMultiplier = 4f;
 
     private Vector2 moveInput;
     private Vector3 aimDirection = Vector3.forward;
@@ -80,9 +83,15 @@ public class PlayerController : MonoBehaviour
             moveDirection.Normalize();
         }
 
-        Vector3 velocity = moveDirection * moveSpeed;
-        velocity.y = body.linearVelocity.y;
-        body.linearVelocity = velocity;
+        Vector3 currentHorizontalVelocity = new Vector3(body.linearVelocity.x, 0f, body.linearVelocity.z);
+        Vector3 targetHorizontalVelocity = moveDirection * moveSpeed;
+        float maxSpeedChange = (moveDirection.sqrMagnitude > 0.001f ? acceleration : deceleration) * Time.fixedDeltaTime;
+        Vector3 nextHorizontalVelocity = Vector3.MoveTowards(currentHorizontalVelocity, targetHorizontalVelocity, maxSpeedChange);
+
+        body.linearVelocity = new Vector3(
+            nextHorizontalVelocity.x,
+            body.linearVelocity.y,
+            nextHorizontalVelocity.z);
     }
 
     private void RotateTowardsAim()
@@ -123,13 +132,18 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyExtraGravity()
     {
-        if (body.linearVelocity.y >= 0f)
+        if (body.linearVelocity.y > 0f)
         {
+            Vector3 extraRiseGravity = Physics.gravity * (riseGravityMultiplier - 1f);
+            body.AddForce(extraRiseGravity, ForceMode.Acceleration);
             return;
         }
 
-        Vector3 extraGravity = Physics.gravity * (fallGravityMultiplier - 1f);
-        body.AddForce(extraGravity, ForceMode.Acceleration);
+        if (body.linearVelocity.y < 0f)
+        {
+            Vector3 extraFallGravity = Physics.gravity * (fallGravityMultiplier - 1f);
+            body.AddForce(extraFallGravity, ForceMode.Acceleration);
+        }
     }
 
     private void UpdateAimFromCursor()
@@ -150,9 +164,9 @@ public class PlayerController : MonoBehaviour
         Ray ray = aimCamera.ScreenPointToRay(Input.mousePosition);
 #endif
 
-        Plane plane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
+        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
 
-        if (!plane.Raycast(ray, out float enter))
+        if (!groundPlane.Raycast(ray, out float enter))
         {
             return;
         }
@@ -169,22 +183,6 @@ public class PlayerController : MonoBehaviour
         aimDirection = direction.normalized;
     }
 
-    public void SetAimDirection(Vector3 worldDirection)
-    {
-        if (worldDirection.sqrMagnitude < 0.001f)
-        {
-            return;
-        }
-
-        worldDirection.y = 0f;
-        aimDirection = worldDirection.normalized;
-    }
-
-    public Vector3 GetAimDirection()
-    {
-        return aimDirection.sqrMagnitude < 0.001f ? rotationRoot.forward : aimDirection.normalized;
-    }
-
     private bool IsGrounded()
     {
         if (bodyCollider == null)
@@ -194,10 +192,27 @@ public class PlayerController : MonoBehaviour
 
         Bounds bounds = bodyCollider.bounds;
         Vector3 origin = bounds.center;
-        float radius = Mathf.Max(0.05f, Mathf.Min(bounds.extents.x, bounds.extents.z) * 0.9f);
+        float radius = Mathf.Max(0.05f, Mathf.Min(bounds.extents.x, bounds.extents.z) * 0.8f);
         float castDistance = bounds.extents.y + groundCheckDistance;
 
         return Physics.SphereCast(origin, radius, Vector3.down, out _, castDistance, ~0, QueryTriggerInteraction.Ignore);
+    }
+
+    public void SetAimDirection(Vector3 worldDirection)
+    {
+        worldDirection.y = 0f;
+
+        if (worldDirection.sqrMagnitude < 0.001f)
+        {
+            return;
+        }
+
+        aimDirection = worldDirection.normalized;
+    }
+
+    public Vector3 GetAimDirection()
+    {
+        return aimDirection.sqrMagnitude < 0.001f ? rotationRoot.forward : aimDirection.normalized;
     }
 
     public void Jump()
@@ -230,15 +245,20 @@ public class PlayerController : MonoBehaviour
 
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.wKey.isPressed) input.y += 1f;
-            if (Keyboard.current.sKey.isPressed) input.y -= 1f;
-            if (Keyboard.current.dKey.isPressed) input.x += 1f;
-            if (Keyboard.current.aKey.isPressed) input.x -= 1f;
+            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) input.y += 1f;
+            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) input.y -= 1f;
+            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) input.x += 1f;
+            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) input.x -= 1f;
 
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 Jump();
             }
+        }
+
+        if (Gamepad.current != null && Gamepad.current.leftStick.ReadValue().sqrMagnitude > input.sqrMagnitude)
+        {
+            input = Gamepad.current.leftStick.ReadValue();
         }
 
         moveInput = Vector2.ClampMagnitude(input, 1f);
@@ -254,5 +274,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 #endif
-
 }
