@@ -11,10 +11,7 @@ public class ChipManager : MonoBehaviour
     public int spentChips; 
     private void Awake()
     {
-        /*  if (gemCount >= 5)
-            spendButton.interactable = true;
-        else
-            spendButton.interactable = false; */
+       
     }
     public void UpdateChipCount(int additionalChips)
     {
