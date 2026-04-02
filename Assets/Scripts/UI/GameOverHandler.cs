@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameOverHandler : MonoBehaviour
 {
+    public static GameOverHandler Instance { get; private set; }
     [Header("UI Panels")]
     public GameObject gameOverPanel;
 
@@ -11,9 +12,9 @@ public class GameOverHandler : MonoBehaviour
     public TextMeshProUGUI gameOverHeader;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI waveSurvivedText;
+    public TextMeshProUGUI earnedChipCoin;
 
     [Header("References")]
-    public GameObject newHighScoreText;
     private EnemySpawner enemySpawner;
     void Start()
     {
@@ -21,7 +22,6 @@ public class GameOverHandler : MonoBehaviour
     }
     public void TriggerGameOver(bool didWin)
     {
-
         Time.timeScale = 0f;
         Cursor.visible = true;
         gameOverPanel.SetActive(true);
@@ -29,6 +29,20 @@ public class GameOverHandler : MonoBehaviour
         if (didWin)
             gameOverHeader.text = "You win!";
 
+        int score = ScoreManager.Instance.GetScore();
+        scoreText.text = $"Score: {score}";
+
         waveSurvivedText.text = $"Waves survived: {enemySpawner.currentWaveIndex + 1}";
+
+        int chipsEarned = score / 10;
+
+        int currentChips = PlayerPrefs.GetInt("ChipCount", 0);
+
+        currentChips += chipsEarned;
+
+        earnedChipCoin.text = "You have eanred: " + chipsEarned + " Chipcoin";
+
+        PlayerPrefs.SetInt("ChipCount", currentChips);
+        PlayerPrefs.Save();
     }
 }

@@ -23,13 +23,6 @@ public class EnemySpawner : MonoBehaviour
     private int enemiesDefeated = 0;
     private int totalEnemiesInWave = 0;
 
-    [Header("Game Management")]
-    public GameObject gameOverHandler;
-    public bool loadFromSave;
-
-
-
-
     void Start()
     {
         StartWave(waveData[currentWaveIndex]);
@@ -119,7 +112,7 @@ public class EnemySpawner : MonoBehaviour
             else
             {
                 waveDescription.text = "All waves completed!";
-                gameOverHandler.GetComponent<GameOverHandler>().TriggerGameOver(true);
+                GameOverHandler.Instance.TriggerGameOver(true);
             }
         }
     }

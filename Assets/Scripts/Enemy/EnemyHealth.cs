@@ -26,8 +26,8 @@ public class EnemyHealth : MonoBehaviour
     }
     private void Die(bool giveScore)
     {
-        Destroy(gameObject);
         OnDeath?.Invoke();
+        ScoreManager.Instance.AddScore(enemyData.scoreValue);
         Destroy(gameObject);
     }
 }

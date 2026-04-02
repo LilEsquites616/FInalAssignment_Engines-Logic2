@@ -1,37 +1,49 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Reflection;
+
 public class ChipManager : MonoBehaviour
 {
     public int chipCount;
     public TextMeshProUGUI jewlText;
     public AdManager adManager;
     public Button spendButton;
-    public int spentChips; 
+    public int spentChips;
+
+    private const string CHIP_KEY = "ChipCount";
+
     private void Awake()
     {
-       
+        LoadChips();
+        UpdateUI();
     }
+
     public void UpdateChipCount(int additionalChips)
     {
-        chipCount+=additionalChips;
-        jewlText.text = "Chipcoin: " + chipCount;
+        chipCount += additionalChips;
 
-        if (additionalChips <0)
+        if (additionalChips < 0)
         {
-            spentChips-=additionalChips;
+            spentChips -= additionalChips;
         }
 
-       /*  if (gemCount <=0)
-            adManager.LoadAd("Reward");
-            adManager.showRewardAdButton.interactable = true;
-            spendButton.interactable = false;
+        SaveChips();
+        UpdateUI();
+    }
 
-        if (gemCount >0)
-            adManager.showRewardAdButton.interactable = false; 
-            if (gemCount >= 5)
-                spendButton.interactable = true; */
+    private void UpdateUI()
+    {
+        jewlText.text = "Chipcoin: " + chipCount;
+    }
 
+    private void SaveChips()
+    {
+        PlayerPrefs.SetInt(CHIP_KEY, chipCount);
+        PlayerPrefs.Save(); 
+    }
+
+    private void LoadChips()
+    {
+        chipCount = PlayerPrefs.GetInt(CHIP_KEY, 0); 
     }
 }
