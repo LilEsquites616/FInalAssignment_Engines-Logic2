@@ -9,7 +9,6 @@ public class PurchaseFufillment : MonoBehaviour
     private const string CHIPS_500 = "buy500chipcoin";
     private const string CHIPS_1000 = "buy1000chipcoin";
     public ChipManager chipManager;
-    public AnalyticsManager analyticsManager;
    public void OnConfirmedOrder(ConfirmedOrder confirmedOrder)
     {
         var purchasedProductInfo = confirmedOrder.Info.PurchasedProductInfo;
@@ -20,9 +19,11 @@ public class PurchaseFufillment : MonoBehaviour
             {
                 case CHIPS_500:
                     GrantsGems(500);
+                    AnalyticsManager.Instance.LogChipPurchase(500);
                     break;
                 case CHIPS_1000:
                     GrantsGems(1000);
+                    AnalyticsManager.Instance.LogChipPurchase(1000);
                     break;
             }
         }

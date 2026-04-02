@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class ChipManager : MonoBehaviour
 {
+    public static ChipManager Instance { get; private set; }
     public int chipCount;
     public TextMeshProUGUI jewlText;
     public AdManager adManager;
@@ -14,6 +15,15 @@ public class ChipManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
         LoadChips();
         UpdateUI();
     }

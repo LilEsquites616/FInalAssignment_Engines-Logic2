@@ -57,6 +57,14 @@ public class PlayerController : MonoBehaviour
 
         body.interpolation = RigidbodyInterpolation.Interpolate;
         body.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+
+        float baseMoveSpeed = moveSpeed;
+
+        if (ModsManager.Instance != null && ModsManager.Instance.moveSpeedActive)
+        {
+            moveSpeed *= 1.5f;
+            Debug.Log("Move Speed Power-Up Active: +50% speed");
+        }
     }
 
     private void Update()

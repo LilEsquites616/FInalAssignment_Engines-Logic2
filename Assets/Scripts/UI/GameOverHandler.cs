@@ -16,12 +16,25 @@ public class GameOverHandler : MonoBehaviour
 
     [Header("References")]
     private EnemySpawner enemySpawner;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         enemySpawner = FindFirstObjectByType<EnemySpawner>();
     }
     public void TriggerGameOver(bool didWin)
     {
+        ModsManager.Instance.ResetAllPowers();
         Time.timeScale = 0f;
         Cursor.visible = true;
         gameOverPanel.SetActive(true);
@@ -33,6 +46,7 @@ public class GameOverHandler : MonoBehaviour
         scoreText.text = $"Score: {score}";
 
         waveSurvivedText.text = $"Waves survived: {enemySpawner.currentWaveIndex + 1}";
+        AnalyticsManager.Instance.LogWaveReached(enemySpawner.currentWaveIndex + 1);
 
         int chipsEarned = score / 10;
 

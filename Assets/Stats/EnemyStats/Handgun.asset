@@ -22,6 +22,6 @@ MonoBehaviour:
   attackSpeed: 1.5
   bulletSpeed: 20
   canShoot: 1
-  scoreValue: 0
+  scoreValue: 35
   enemyAnimator: {fileID: 0}
   enemySprite: {fileID: 0}

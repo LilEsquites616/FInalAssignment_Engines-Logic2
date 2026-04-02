@@ -43,7 +43,7 @@ public class AdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
     public void ShowAd(string adUnitPrefix)
     {
         string adUnitID = adUnitPrefix + adUnitAffix;
-        //analyticsManager.LogAdWatched(adUnitPrefix);
+        AnalyticsManager.Instance.LogAdWatched(adUnitPrefix);
         Advertisement.Show(adUnitID, this);
         Advertisement.Banner.Hide();
     }

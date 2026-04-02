@@ -30,21 +30,28 @@ public class PlayerShooter : MonoBehaviour
     private Vector2 lookInput;
     private bool isReloading = false;
 
-    private void Awake()
+   private void Awake()
+{
+    if (playerController == null)
     {
-        if (playerController == null)
-        {
-            playerController = GetComponent<PlayerController>();
-        }
-
-        if (aimCamera == null)
-        {
-            aimCamera = Camera.main;
-        }
-
-        currentAmmo = maxAmmo;
-        UpdateAmmoUI();
+        playerController = GetComponent<PlayerController>();
     }
+
+    if (aimCamera == null)
+    {
+        aimCamera = Camera.main;
+    }
+
+    
+    if (ModsManager.Instance != null && ModsManager.Instance.ammoActive)
+    {
+        maxAmmo += 20;
+        Debug.Log("Ammo Power-Up Active: +20 max ammo");
+    }
+
+    currentAmmo = maxAmmo;
+    UpdateAmmoUI();
+}
 
     private void Update()
     {
