@@ -19,7 +19,7 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int amount)
     {
         score += amount;
-        scoreText.text = "Socre: " + score;
+        scoreText.text = "Score: " + score;
     }
 
     public int GetScore()
