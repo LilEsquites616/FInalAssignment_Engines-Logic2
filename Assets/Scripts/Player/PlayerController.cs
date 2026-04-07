@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -28,6 +29,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 aimDirection = Vector3.forward;
     private bool jumpRequested;
     private bool hasPlayerInput;
+    private float baseMoveSpeed;
+    private float modMoveSpeedMultiplier = 1f;
+    private float temporaryMoveSpeedMultiplier = 1f;
+    private Coroutine speedBoostRoutine;
 
     private void Awake()
     {
@@ -58,13 +63,15 @@ public class PlayerController : MonoBehaviour
         body.interpolation = RigidbodyInterpolation.Interpolate;
         body.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
-        float baseMoveSpeed = moveSpeed;
+        baseMoveSpeed = moveSpeed;
 
         if (ModsManager.Instance != null && ModsManager.Instance.moveSpeedActive)
         {
-            moveSpeed *= 1.5f;
+            modMoveSpeedMultiplier = 1.5f;
             Debug.Log("Move Speed Power-Up Active: +50% speed");
         }
+
+        RefreshMoveSpeed();
     }
 
     private void Update()
@@ -226,6 +233,33 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         jumpRequested = true;
+    }
+
+    public void ApplyTemporarySpeedBoost(float multiplier, float duration)
+    {
+        if (speedBoostRoutine != null)
+        {
+            StopCoroutine(speedBoostRoutine);
+        }
+
+        speedBoostRoutine = StartCoroutine(TemporarySpeedBoostRoutine(multiplier, duration));
+    }
+
+    private IEnumerator TemporarySpeedBoostRoutine(float multiplier, float duration)
+    {
+        temporaryMoveSpeedMultiplier = Mathf.Max(1f, multiplier);
+        RefreshMoveSpeed();
+
+        yield return new WaitForSeconds(duration);
+
+        temporaryMoveSpeedMultiplier = 1f;
+        RefreshMoveSpeed();
+        speedBoostRoutine = null;
+    }
+
+    private void RefreshMoveSpeed()
+    {
+        moveSpeed = baseMoveSpeed * modMoveSpeedMultiplier * temporaryMoveSpeedMultiplier;
     }
 
 #if ENABLE_INPUT_SYSTEM

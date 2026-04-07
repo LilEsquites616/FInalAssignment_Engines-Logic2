@@ -19,6 +19,7 @@ public class PlayerShooter : MonoBehaviour
     [SerializeField] private float fireCooldown = 0.2f;
     [SerializeField] private float bulletDamage = 20f;
     [SerializeField] private LayerMask aimLayers = ~0;
+    [SerializeField] private float multiShotSpreadAngle = 10f;
 
     [Header("Ammo")]
     [SerializeField] private int maxAmmo = 30;
@@ -29,29 +30,30 @@ public class PlayerShooter : MonoBehaviour
     private float lastShotTime = -999f;
     private Vector2 lookInput;
     private bool isReloading = false;
+    private int temporaryProjectileCount = 1;
+    private Coroutine multiShotRoutine;
 
-   private void Awake()
-{
-    if (playerController == null)
+    private void Awake()
     {
-        playerController = GetComponent<PlayerController>();
-    }
+        if (playerController == null)
+        {
+            playerController = GetComponent<PlayerController>();
+        }
 
-    if (aimCamera == null)
-    {
-        aimCamera = Camera.main;
-    }
+        if (aimCamera == null)
+        {
+            aimCamera = Camera.main;
+        }
 
-    
-    if (ModsManager.Instance != null && ModsManager.Instance.ammoActive)
-    {
-        maxAmmo += 20;
-        Debug.Log("Ammo Power-Up Active: +20 max ammo");
-    }
+        if (ModsManager.Instance != null && ModsManager.Instance.ammoActive)
+        {
+            maxAmmo += 20;
+            Debug.Log("Ammo Power-Up Active: +20 max ammo");
+        }
 
-    currentAmmo = maxAmmo;
-    UpdateAmmoUI();
-}
+        currentAmmo = maxAmmo;
+        UpdateAmmoUI();
+    }
 
     private void Update()
     {
@@ -179,36 +181,8 @@ public class PlayerShooter : MonoBehaviour
             return;
         }
 
-        GameObject bullet = Instantiate(
-            bulletPrefab,
-            firePoint.position,
-            Quaternion.LookRotation(shootDirection, Vector3.up)
-        );
-
-        Bullet bulletComponent = bullet.GetComponent<Bullet>();
-        if (bulletComponent != null)
-        {
-            bulletComponent.damage = bulletDamage;
-            bulletComponent.damageEnemies = true;
-            bulletComponent.damagePlayer = false;
-        }
-
-        Rigidbody bulletBody = bullet.GetComponent<Rigidbody>();
-        if (bulletBody != null)
-        {
-            bulletBody.linearVelocity = shootDirection * bulletSpeed;
-        }
-
-        Collider bulletCollider = bullet.GetComponent<Collider>();
         Collider[] playerColliders = GetComponentsInChildren<Collider>();
-
-        if (bulletCollider != null)
-        {
-            foreach (var col in playerColliders)
-            {
-                Physics.IgnoreCollision(bulletCollider, col, true);
-            }
-        }
+        FireProjectiles(shootDirection, playerColliders);
 
         currentAmmo--;
         UpdateAmmoUI();
@@ -231,6 +205,80 @@ public class PlayerShooter : MonoBehaviour
         if (ammoText != null)
         {
             ammoText.text = currentAmmo + " / " + maxAmmo;
+        }
+    }
+
+    public void ApplyTemporaryMultiShot(int projectileCount, float duration)
+    {
+        if (multiShotRoutine != null)
+        {
+            StopCoroutine(multiShotRoutine);
+        }
+
+        multiShotRoutine = StartCoroutine(TemporaryMultiShotRoutine(projectileCount, duration));
+    }
+
+    private IEnumerator TemporaryMultiShotRoutine(int projectileCount, float duration)
+    {
+        temporaryProjectileCount = Mathf.Max(1, projectileCount);
+        yield return new WaitForSeconds(duration);
+        temporaryProjectileCount = 1;
+        multiShotRoutine = null;
+    }
+
+    private void FireProjectiles(Vector3 shootDirection, Collider[] playerColliders)
+    {
+        int projectileCount = Mathf.Max(1, temporaryProjectileCount);
+
+        if (projectileCount == 1)
+        {
+            SpawnBullet(shootDirection, playerColliders);
+            return;
+        }
+
+        float startAngle = -multiShotSpreadAngle * 0.5f;
+        float angleStep = projectileCount > 1 ? multiShotSpreadAngle / (projectileCount - 1) : 0f;
+
+        for (int i = 0; i < projectileCount; i++)
+        {
+            float angleOffset = startAngle + (angleStep * i);
+            Vector3 spreadDirection = Quaternion.AngleAxis(angleOffset, Vector3.up) * shootDirection;
+            SpawnBullet(spreadDirection.normalized, playerColliders);
+        }
+    }
+
+    private void SpawnBullet(Vector3 direction, Collider[] playerColliders)
+    {
+        GameObject bullet = Instantiate(
+            bulletPrefab,
+            firePoint.position,
+            Quaternion.LookRotation(direction, Vector3.up)
+        );
+
+        Bullet bulletComponent = bullet.GetComponent<Bullet>();
+        if (bulletComponent != null)
+        {
+            bulletComponent.damage = bulletDamage;
+            bulletComponent.damageEnemies = true;
+            bulletComponent.damagePlayer = false;
+        }
+
+        Rigidbody bulletBody = bullet.GetComponent<Rigidbody>();
+        if (bulletBody != null)
+        {
+            bulletBody.linearVelocity = direction * bulletSpeed;
+        }
+
+        Collider bulletCollider = bullet.GetComponent<Collider>();
+
+        if (bulletCollider == null)
+        {
+            return;
+        }
+
+        foreach (var col in playerColliders)
+        {
+            Physics.IgnoreCollision(bulletCollider, col, true);
         }
     }
 }
