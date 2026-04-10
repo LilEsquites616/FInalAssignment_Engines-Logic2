@@ -1,0 +1,25 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.7f1
+CRC: 1221326684
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7687ffcadf8212e0fd3ad8f28e91288d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: bc9f87c7e64ff656997db0f2b2a91703
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 2c6b0c4e6dacfde69cc2318283830f95
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Sprites/Coin.png
+- Assets/Sprites/Bullet.png
+- Assets/Sprites/Heart.png
+Dependencies: []

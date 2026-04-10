@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463de7754ab57d543abfc923dd1721ef, type: 3}
+  m_Name: Wave2
+  m_EditorClassIdentifier: Assembly-CSharp::Wave
+  waveNumber: 2
+  totalEnemiesToSpawn: 40
+  spawnRate: 1.6
+  normalEnemyWeight: 0.33
+  hardEnemyWeight: 0.33
+  eliteEnemyWeight: 0.33
+  normalEnemy: {fileID: 11400000, guid: 9fedbc4ab7902234d986b102c0f8caf7, type: 2}
+  hardEnemy: {fileID: 11400000, guid: 4128b43dd36f4834f9c901ad07c5c586, type: 2}
+  eliteEnemy: {fileID: 11400000, guid: 02440da3d95fc5040b15369424ebecb3, type: 2}
