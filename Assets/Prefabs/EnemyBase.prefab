@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 300489384446732376}
   - component: {fileID: 3536816131787126024}
   - component: {fileID: 3104441824394946486}
+  - component: {fileID: 6828347807571059471}
   m_Layer: 0
   m_Name: EnemyBase
   m_TagString: Enemy
@@ -233,6 +234,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6828347807571059471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5609432389629338291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100fa3717785a084fbfee7d3de131dee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropper
+  dropOptions:
+  - powerUpPrefab: {fileID: 330445938883580129, guid: 74fbc4a43d6dd2a41b3bbcfde902b8c9, type: 3}
+    dropChance: 2
+  - powerUpPrefab: {fileID: 4023636855170891244, guid: e52f312c3141e5b4cb3ed102240af3de, type: 3}
+    dropChance: 4
+  - powerUpPrefab: {fileID: 5957862141389233057, guid: 87bec3b683c5ec34cae2f1022c90b6c9, type: 3}
+    dropChance: 3
+  dropOffset: {x: 0, y: 0.5, z: 0}
+  randomizeYaw: 1
 --- !u!1 &8291786241836475503
 GameObject:
   m_ObjectHideFlags: 0
