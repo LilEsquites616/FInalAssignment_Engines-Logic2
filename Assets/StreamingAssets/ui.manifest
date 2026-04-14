@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.7f1
-CRC: 2615991523
+CRC: 3087059389
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6dbf0426e198362cd13ad3796ba709cc
+    Hash: 4fc8eabbeb347e6d876c9f7dd64cd40d
   TypeTreeHash:
     serializedVersion: 2
     Hash: bc9f87c7e64ff656997db0f2b2a91703
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 9e6571795019289625111a0887b994bd
+    Hash: b9acfa76a66c87c9a6aa4db68b9f2cba
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -19,10 +19,6 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Sprites/MoveSpeed_Up.png
-- Assets/Sprites/Coin.png
-- Assets/Sprites/Bullet.png
-- Assets/Sprites/HP_Up.png
-- Assets/Sprites/Heart.png
-- Assets/Sprites/Ammo_Up.png
+- Assets/Sprites/ButtonUI_General.png
+- Assets/Sprites/GameUI_Box.png
 Dependencies: []

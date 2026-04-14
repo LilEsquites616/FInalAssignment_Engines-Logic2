@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.7f1
-CRC: 3197690963
+CRC: 2693574795
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -9,4 +9,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_1:
       Name: icons
+      Dependencies: {}
+    Info_2:
+      Name: ui
       Dependencies: {}

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 121feac82f78ca74b82e274a98e58be3
+guid: f6e6b3222be2c7f4f8da34120fa9b3ec
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -126,5 +126,5 @@ TextureImporter:
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
-  assetBundleName: 
+  assetBundleName: icons
   assetBundleVariant: 
