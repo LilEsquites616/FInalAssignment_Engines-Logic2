@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
     public EnemyData enemyData;
     [SerializeField] private Rigidbody body;
     [SerializeField] private Animator animator;
+    [SerializeField] private EnemySpriteAnimator spriteAnimator;
     [SerializeField] private NavMeshAgent navAgent;
     public Transform Target;
     public float turnSpeed = 180f;
@@ -28,6 +29,7 @@ public class EnemyController : MonoBehaviour
     {
         if (body == null) body = GetComponent<Rigidbody>();
         if (animator == null) animator = GetComponent<Animator>();
+        if (spriteAnimator == null) spriteAnimator = GetComponentInChildren<EnemySpriteAnimator>();
         if (navAgent == null) navAgent = GetComponent<NavMeshAgent>();
         if (GameObject.FindWithTag("Player")!=null)
             Target = GameObject.FindWithTag("Player").transform;
@@ -38,6 +40,18 @@ public class EnemyController : MonoBehaviour
         turnSpeed = enemyData.turnSpeed;
         attackRadius = enemyData.attackRadius;
         safeRadius = enemyData.safeRadius;
+
+        if (animator != null && enemyData.enemyAnimator != null)
+        {
+            animator.runtimeAnimatorController = enemyData.enemyAnimator;
+        }
+
+        spriteAnimator?.RefreshFromEnemyData();
+    }
+
+    public void PlayShootFlash()
+    {
+        spriteAnimator?.PlayShootFlash();
     }
 
     private void Update()

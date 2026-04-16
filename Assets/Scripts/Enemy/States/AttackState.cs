@@ -84,6 +84,7 @@ public class AttackState : StateMachineBehaviour
             rb.linearVelocity = (enemyController.Target.position - enemyController.firePoint.position).normalized * enemyController.bulletSpeed;
         }
 
+        enemyController.PlayShootFlash();
         AudioManager.Instance?.PlayEnemyShot();
     }
 

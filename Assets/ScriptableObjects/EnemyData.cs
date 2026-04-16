@@ -22,4 +22,5 @@ public class EnemyData : ScriptableObject
     [Header("Visual")]
     public RuntimeAnimatorController enemyAnimator;
     public Sprite enemySprite;
+    public Sprite enemyShootSprite;
 }

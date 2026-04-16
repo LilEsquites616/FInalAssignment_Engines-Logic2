@@ -32,6 +32,7 @@ public class PlayerShooter : MonoBehaviour
     private bool isReloading = false;
     private int temporaryProjectileCount = 1;
     private Coroutine multiShotRoutine;
+    private PlayerSpriteAnimator playerSpriteAnimator;
 
     private void Awake()
     {
@@ -44,6 +45,8 @@ public class PlayerShooter : MonoBehaviour
         {
             aimCamera = Camera.main;
         }
+
+        playerSpriteAnimator = GetComponentInChildren<PlayerSpriteAnimator>();
 
         if (ModsManager.Instance != null && ModsManager.Instance.ammoActive)
         {
@@ -183,6 +186,7 @@ public class PlayerShooter : MonoBehaviour
 
         Collider[] playerColliders = GetComponentsInChildren<Collider>();
         FireProjectiles(shootDirection, playerColliders);
+        playerSpriteAnimator?.PlayShootFlash();
         AudioManager.Instance?.PlayPlayerShot();
 
         currentAmmo--;
