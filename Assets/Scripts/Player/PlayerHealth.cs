@@ -40,6 +40,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount * damageMultiplier;
         if (currentHealth < 0) currentHealth = 0;
 
+        AudioManager.Instance?.PlayPlayerHurt();
         UpdateHealthUI();
 
         if (currentHealth <= 0f)

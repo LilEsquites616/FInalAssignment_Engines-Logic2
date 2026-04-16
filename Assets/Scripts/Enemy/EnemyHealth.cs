@@ -19,6 +19,7 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(int amount)
     {
         health -= amount;
+        AudioManager.Instance?.PlayEnemyHurt();
         if (health <= 0)
         {
             Die(true);

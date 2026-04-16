@@ -44,11 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aef9f9c7a8af7c4da37a3ac71a87104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  musicClip: {fileID: 0}
+  musicClip: {fileID: 8300000, guid: 7e9aa7ddf9214f442b79d368ec0b6f05, type: 3}
   playMusicOnStart: 1
+  keepMusicPlaying: 1
   musicVolume: 0.6
-  playerShotClip: {fileID: 0}
-  enemyShotClip: {fileID: 0}
-  sfxVolume: 1
+  playerShotClip: {fileID: 8300000, guid: 04071026019bfd54a8614b14173399c9, type: 3}
+  enemyShotClip: {fileID: 8300000, guid: 3334df560071ddf47921a6cf33de4902, type: 3}
+  playerHurtClip: {fileID: 8300000, guid: 4d4387dd9112fb541a48d01450bee15c, type: 3}
+  enemyHurtClip: {fileID: 8300000, guid: 3334df560071ddf47921a6cf33de4902, type: 3}
+  pickupClip: {fileID: 8300000, guid: b8656bb5bb4f00b408b2fbdd6d0a2edd, type: 3}
+  playerShotVolume: 1
+  enemyShotVolume: 1
+  playerHurtVolume: 1
+  enemyHurtVolume: 1
+  pickupVolume: 1
   musicSource: {fileID: 0}
   sfxSource: {fileID: 0}

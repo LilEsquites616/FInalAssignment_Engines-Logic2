@@ -32,7 +32,7 @@ public class PlayerShooter : MonoBehaviour
     private bool isReloading = false;
     private int temporaryProjectileCount = 1;
     private Coroutine multiShotRoutine;
-    private PlayerSpriteAnimator playerSpriteAnimator;
+    private SpriteFrameAnimator playerSpriteAnimator;
 
     private void Awake()
     {
@@ -46,7 +46,7 @@ public class PlayerShooter : MonoBehaviour
             aimCamera = Camera.main;
         }
 
-        playerSpriteAnimator = GetComponentInChildren<PlayerSpriteAnimator>();
+        playerSpriteAnimator = GetComponentInChildren<SpriteFrameAnimator>();
 
         if (ModsManager.Instance != null && ModsManager.Instance.ammoActive)
         {

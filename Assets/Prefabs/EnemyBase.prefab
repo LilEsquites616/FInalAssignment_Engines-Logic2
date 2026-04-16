@@ -24,7 +24,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &871582294180307291
 Transform:
   m_ObjectHideFlags: 0
@@ -39,6 +39,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8922325175562400239}
+  - {fileID: 7356898840756619285}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &386110048575107049
@@ -172,6 +173,7 @@ MonoBehaviour:
   enemyData: {fileID: 11400000, guid: 9fedbc4ab7902234d986b102c0f8caf7, type: 2}
   body: {fileID: 3536816131787126024}
   animator: {fileID: 3104441824394946486}
+  spriteAnimator: {fileID: 0}
   navAgent: {fileID: 1016365777882831268}
   Target: {fileID: 0}
   turnSpeed: 180
@@ -255,6 +257,37 @@ MonoBehaviour:
     dropChance: 3
   dropOffset: {x: 0, y: 0.5, z: 0}
   randomizeYaw: 1
+--- !u!1 &6134934827987538107
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7356898840756619285}
+  m_Layer: 0
+  m_Name: 'Visuals '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7356898840756619285
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6134934827987538107}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 871582294180307291}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8291786241836475503
 GameObject:
   m_ObjectHideFlags: 0

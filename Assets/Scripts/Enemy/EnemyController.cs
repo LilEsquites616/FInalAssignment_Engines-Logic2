@@ -4,10 +4,13 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
+    private static readonly int IsMovingParam = Animator.StringToHash("IsMoving");
+    private static readonly int ShootParam = Animator.StringToHash("Shoot");
+
     public EnemyData enemyData;
     [SerializeField] private Rigidbody body;
     [SerializeField] private Animator animator;
-    [SerializeField] private EnemySpriteAnimator spriteAnimator;
+    [SerializeField] private SpriteFrameAnimator spriteAnimator;
     [SerializeField] private NavMeshAgent navAgent;
     public Transform Target;
     public float turnSpeed = 180f;
@@ -24,15 +27,19 @@ public class EnemyController : MonoBehaviour
     private readonly int hasTargetParam = Animator.StringToHash("Player Close");
     [SerializeField] private AudioSource detectSfx;
     [SerializeField] private  AudioSource unDetectSfx;
+    private bool hasVisualMoveParam;
+    private bool hasVisualShootParam;
 
     private void Awake()
     {
         if (body == null) body = GetComponent<Rigidbody>();
         if (animator == null) animator = GetComponent<Animator>();
-        if (spriteAnimator == null) spriteAnimator = GetComponentInChildren<EnemySpriteAnimator>();
+        if (spriteAnimator == null) spriteAnimator = GetComponentInChildren<SpriteFrameAnimator>();
         if (navAgent == null) navAgent = GetComponent<NavMeshAgent>();
         if (GameObject.FindWithTag("Player")!=null)
             Target = GameObject.FindWithTag("Player").transform;
+
+        CacheAnimatorParameters();
     }
     public void StatPass()
     {
@@ -44,6 +51,7 @@ public class EnemyController : MonoBehaviour
         if (animator != null && enemyData.enemyAnimator != null)
         {
             animator.runtimeAnimatorController = enemyData.enemyAnimator;
+            CacheAnimatorParameters();
         }
 
         spriteAnimator?.RefreshFromEnemyData();
@@ -51,6 +59,12 @@ public class EnemyController : MonoBehaviour
 
     public void PlayShootFlash()
     {
+        if (animator != null && hasVisualShootParam)
+        {
+            animator.ResetTrigger(ShootParam);
+            animator.SetTrigger(ShootParam);
+        }
+
         spriteAnimator?.PlayShootFlash();
     }
 
@@ -60,6 +74,12 @@ public class EnemyController : MonoBehaviour
             distance = Vector3.Distance(transform.position, Target.position);
         bool isTargetClose = distance <= safeRadius;
         animator.SetBool(hasTargetParam, isTargetClose);
+
+        if (animator != null && hasVisualMoveParam)
+        {
+            bool isMoving = moveDirection.sqrMagnitude > 0.0025f;
+            animator.SetBool(IsMovingParam, isMoving);
+        }
         
         if (animator != null)
         {
@@ -72,5 +92,29 @@ public class EnemyController : MonoBehaviour
                 turnSpeed * Time.deltaTime);
             }
         }
+    }
+
+    private void CacheAnimatorParameters()
+    {
+        hasVisualMoveParam = HasParameter("IsMoving", AnimatorControllerParameterType.Bool);
+        hasVisualShootParam = HasParameter("Shoot", AnimatorControllerParameterType.Trigger);
+    }
+
+    private bool HasParameter(string parameterName, AnimatorControllerParameterType parameterType)
+    {
+        if (animator == null)
+        {
+            return false;
+        }
+
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            if (parameter.name == parameterName && parameter.type == parameterType)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -37,6 +37,7 @@ public class ShieldPickup : MonoBehaviour
         }
 
         collected = true;
+        AudioManager.Instance?.PlayPickup();
         playerHealth.ApplyTemporaryShield(incomingDamageMultiplier, duration);
         PickupPromptUI.Instance.ShowTimedPrompt(promptLabel, duration);
 

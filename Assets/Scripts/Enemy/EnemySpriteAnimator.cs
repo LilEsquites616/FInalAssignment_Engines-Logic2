@@ -3,7 +3,11 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class EnemySpriteAnimator : MonoBehaviour
 {
+    private static readonly int ShootParam = Animator.StringToHash("Shoot");
+    private static readonly int IsMovingParam = Animator.StringToHash("IsMoving");
+
     [Header("References")]
+    [SerializeField] private Animator animator;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private EnemyController enemyController;
 
@@ -12,15 +16,28 @@ public class EnemySpriteAnimator : MonoBehaviour
     [SerializeField] private Sprite moveSprite;
     [SerializeField] private Sprite shootSprite;
 
+    [Header("Facing")]
+    [SerializeField] private bool flipSpriteWithAim = true;
+    [SerializeField] private bool useFacingPositions = false;
+    [SerializeField] private Vector3 faceRightLocalPosition;
+    [SerializeField] private Vector3 faceLeftLocalPosition;
+
     [Header("Tuning")]
     [SerializeField] private float moveThreshold = 0.05f;
     [SerializeField] private float shootFlashDuration = 0.06f;
 
     private Sprite initialSprite;
     private float shootFlashTimer;
+    private bool hasShootTrigger;
+    private bool hasIsMovingParameter;
 
     private void Awake()
     {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+
         if (spriteRenderer == null)
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -36,7 +53,9 @@ public class EnemySpriteAnimator : MonoBehaviour
             initialSprite = spriteRenderer.sprite;
         }
 
+        InitializeFacingPositions();
         RefreshFromEnemyData();
+        CacheAnimatorParameters();
     }
 
     private void LateUpdate()
@@ -46,14 +65,27 @@ public class EnemySpriteAnimator : MonoBehaviour
             return;
         }
 
-        if (shootFlashTimer > 0f)
+        bool isMoving = IsMoving();
+        UpdateFacing();
+
+        if (animator != null && hasIsMovingParameter)
         {
-            shootFlashTimer -= Time.deltaTime;
-            SetSprite(shootSprite != null ? shootSprite : GetBaseSprite());
+            animator.SetBool(IsMovingParam, isMoving);
+        }
+
+        if (animator != null)
+        {
             return;
         }
 
-        SetSprite(GetBaseSprite());
+        if (shootFlashTimer > 0f)
+        {
+            shootFlashTimer -= Time.deltaTime;
+            SetSprite(shootSprite != null ? shootSprite : GetBaseSprite(isMoving));
+            return;
+        }
+
+        SetSprite(GetBaseSprite(isMoving));
     }
 
     public void RefreshFromEnemyData()
@@ -73,11 +105,21 @@ public class EnemySpriteAnimator : MonoBehaviour
             shootSprite = enemyController.enemyData.enemyShootSprite;
         }
 
-        SetSprite(GetBaseSprite());
+        if (animator == null)
+        {
+            SetSprite(GetBaseSprite(IsMoving()));
+        }
     }
 
     public void PlayShootFlash()
     {
+        if (animator != null && hasShootTrigger)
+        {
+            animator.ResetTrigger(ShootParam);
+            animator.SetTrigger(ShootParam);
+            return;
+        }
+
         if (shootSprite == null)
         {
             return;
@@ -87,9 +129,9 @@ public class EnemySpriteAnimator : MonoBehaviour
         SetSprite(shootSprite);
     }
 
-    private Sprite GetBaseSprite()
+    private Sprite GetBaseSprite(bool isMoving)
     {
-        if (IsMoving() && moveSprite != null)
+        if (isMoving && moveSprite != null)
         {
             return moveSprite;
         }
@@ -100,6 +142,69 @@ public class EnemySpriteAnimator : MonoBehaviour
         }
 
         return initialSprite;
+    }
+
+    private void UpdateFacing()
+    {
+        if (enemyController == null)
+        {
+            return;
+        }
+
+        Vector3 lookDirection = enemyController.lookDirection;
+
+        if (lookDirection.sqrMagnitude < 0.001f)
+        {
+            return;
+        }
+
+        bool facingRight = lookDirection.x >= 0f;
+
+        if (flipSpriteWithAim)
+        {
+            spriteRenderer.flipX = !facingRight;
+        }
+
+        if (useFacingPositions)
+        {
+            transform.localPosition = facingRight ? faceRightLocalPosition : faceLeftLocalPosition;
+        }
+    }
+
+    private void InitializeFacingPositions()
+    {
+        if (faceRightLocalPosition == Vector3.zero && faceLeftLocalPosition == Vector3.zero)
+        {
+            faceRightLocalPosition = transform.localPosition;
+            faceLeftLocalPosition = new Vector3(
+                -transform.localPosition.x,
+                transform.localPosition.y,
+                transform.localPosition.z);
+        }
+    }
+
+    private void CacheAnimatorParameters()
+    {
+        hasShootTrigger = HasParameter("Shoot", AnimatorControllerParameterType.Trigger);
+        hasIsMovingParameter = HasParameter("IsMoving", AnimatorControllerParameterType.Bool);
+    }
+
+    private bool HasParameter(string parameterName, AnimatorControllerParameterType parameterType)
+    {
+        if (animator == null)
+        {
+            return false;
+        }
+
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            if (parameter.name == parameterName && parameter.type == parameterType)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private bool IsMoving()

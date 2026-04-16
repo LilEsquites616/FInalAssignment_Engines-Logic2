@@ -37,6 +37,7 @@ public class SpeedPickup : MonoBehaviour
         }
 
         collected = true;
+        AudioManager.Instance?.PlayPickup();
         playerController.ApplyTemporarySpeedBoost(speedMultiplier, duration);
         PickupPromptUI.Instance.ShowTimedPrompt(promptLabel, duration);
 

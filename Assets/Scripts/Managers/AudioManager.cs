@@ -7,12 +7,22 @@ public class AudioManager : MonoBehaviour
     [Header("Music")]
     [SerializeField] private AudioClip musicClip;
     [SerializeField] private bool playMusicOnStart = true;
+    [SerializeField] private bool keepMusicPlaying = true;
     [SerializeField] [Range(0f, 1f)] private float musicVolume = 0.6f;
 
-    [Header("SFX")]
+    [Header("SFX Clips")]
     [SerializeField] private AudioClip playerShotClip;
     [SerializeField] private AudioClip enemyShotClip;
-    [SerializeField] [Range(0f, 1f)] private float sfxVolume = 1f;
+    [SerializeField] private AudioClip playerHurtClip;
+    [SerializeField] private AudioClip enemyHurtClip;
+    [SerializeField] private AudioClip pickupClip;
+
+    [Header("SFX Volume")]
+    [SerializeField] [Range(0f, 1f)] private float playerShotVolume = 1f;
+    [SerializeField] [Range(0f, 1f)] private float enemyShotVolume = 1f;
+    [SerializeField] [Range(0f, 1f)] private float playerHurtVolume = 1f;
+    [SerializeField] [Range(0f, 1f)] private float enemyHurtVolume = 1f;
+    [SerializeField] [Range(0f, 1f)] private float pickupVolume = 1f;
 
     [Header("Optional Sources")]
     [SerializeField] private AudioSource musicSource;
@@ -41,6 +51,21 @@ public class AudioManager : MonoBehaviour
     private void OnValidate()
     {
         ApplyVolumes();
+    }
+
+    private void Update()
+    {
+        if (!keepMusicPlaying || !playMusicOnStart || musicClip == null)
+        {
+            return;
+        }
+
+        EnsureAudioSources();
+
+        if (!musicSource.isPlaying)
+        {
+            PlayMusic();
+        }
     }
 
     public void PlayMusic()
@@ -75,15 +100,30 @@ public class AudioManager : MonoBehaviour
 
     public void PlayPlayerShot()
     {
-        PlaySfx(playerShotClip);
+        PlaySfx(playerShotClip, playerShotVolume);
     }
 
     public void PlayEnemyShot()
     {
-        PlaySfx(enemyShotClip);
+        PlaySfx(enemyShotClip, enemyShotVolume);
     }
 
-    private void PlaySfx(AudioClip clip)
+    public void PlayPlayerHurt()
+    {
+        PlaySfx(playerHurtClip, playerHurtVolume);
+    }
+
+    public void PlayEnemyHurt()
+    {
+        PlaySfx(enemyHurtClip, enemyHurtVolume);
+    }
+
+    public void PlayPickup()
+    {
+        PlaySfx(pickupClip, pickupVolume);
+    }
+
+    private void PlaySfx(AudioClip clip, float volume)
     {
         if (clip == null)
         {
@@ -91,7 +131,7 @@ public class AudioManager : MonoBehaviour
         }
 
         EnsureAudioSources();
-        sfxSource.PlayOneShot(clip, sfxVolume);
+        sfxSource.PlayOneShot(clip, volume);
     }
 
     private void EnsureAudioSources()

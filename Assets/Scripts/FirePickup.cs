@@ -37,6 +37,7 @@ public class FirePickup : MonoBehaviour
         }
 
         collected = true;
+        AudioManager.Instance?.PlayPickup();
         playerShooter.ApplyTemporaryMultiShot(projectileCount, duration);
         PickupPromptUI.Instance.ShowTimedPrompt(promptLabel, duration);
 
