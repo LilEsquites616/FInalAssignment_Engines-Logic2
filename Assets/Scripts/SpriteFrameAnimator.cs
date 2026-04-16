@@ -136,6 +136,11 @@ public class SpriteFrameAnimator : MonoBehaviour
         {
             shootSprite = enemyController.enemyData.enemyShootSprite;
         }
+
+        if ((moveFrames == null || moveFrames.Length == 0) && enemyController.enemyData.enemyMoveFrames != null && enemyController.enemyData.enemyMoveFrames.Length > 0)
+        {
+            moveFrames = enemyController.enemyData.enemyMoveFrames;
+        }
     }
 
     private bool IsMoving()

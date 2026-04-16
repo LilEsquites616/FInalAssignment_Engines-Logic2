@@ -23,5 +23,11 @@ MonoBehaviour:
   bulletSpeed: 20
   canShoot: 1
   scoreValue: 35
-  enemyAnimator: {fileID: 0}
-  enemySprite: {fileID: 0}
+  enemyAnimator: {fileID: 9100000, guid: e7df096efbaf4ba8a0be68aedaf01bf8, type: 2}
+  enemySprite: {fileID: -1190486752, guid: 2b4799bfd22148840a78e8e146943ec6, type: 3}
+  enemyMoveFrames:
+  - {fileID: -1190486752, guid: 2b4799bfd22148840a78e8e146943ec6, type: 3}
+  - {fileID: -1748657799, guid: 2b4799bfd22148840a78e8e146943ec6, type: 3}
+  - {fileID: 1028627685, guid: 2b4799bfd22148840a78e8e146943ec6, type: 3}
+  - {fileID: 1188230892, guid: 2b4799bfd22148840a78e8e146943ec6, type: 3}
+  enemyShootSprite: {fileID: -555240851, guid: 2b4799bfd22148840a78e8e146943ec6, type: 3}

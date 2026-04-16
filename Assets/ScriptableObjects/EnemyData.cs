@@ -22,5 +22,6 @@ public class EnemyData : ScriptableObject
     [Header("Visual")]
     public RuntimeAnimatorController enemyAnimator;
     public Sprite enemySprite;
+    public Sprite[] enemyMoveFrames;
     public Sprite enemyShootSprite;
 }
