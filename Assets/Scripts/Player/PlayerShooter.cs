@@ -183,6 +183,7 @@ public class PlayerShooter : MonoBehaviour
 
         Collider[] playerColliders = GetComponentsInChildren<Collider>();
         FireProjectiles(shootDirection, playerColliders);
+        AudioManager.Instance?.PlayPlayerShot();
 
         currentAmmo--;
         UpdateAmmoUI();
